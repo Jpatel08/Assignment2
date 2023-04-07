@@ -28,22 +28,66 @@ const Navbar = ({ cartItemsCount, onViewChange }) => {
 };
 
 const ProductGrid = ({ onAddToCart }) => {
+  const [quantities, setQuantities] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleIncrement = (productId) => {
+    setQuantities({
+      ...quantities,
+      [productId]: (quantities[productId] || 0) + 1
+    });
+  };
+
+  const handleDecrement = (productId) => {
+    const newQuantities = { ...quantities };
+    newQuantities[productId]--;
+    if (newQuantities[productId] < 0) {
+      newQuantities[productId] = 0;
+    }
+    setQuantities(newQuantities);
+  };
+
+  const filteredProducts = Products.filter((product) => {
+    return product.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
-    <div className="row row-cols-1 row-cols-md-3 g-4">
-      {Products.map((product) => (
-        <div className="col" key={product.id}>
-          <div className="card">
-            <img src={product.image} className="card-img-top" alt={product.title} />
-            <div className="card-body">
-              <h5 className="card-title">{product.title}</h5>
-              <p className="card-text">{product.description}</p>
-              <p className="card-text">${product.price}</p>
-              <p className="card-text"><small className="text-muted">{product.rating.rate} ({product.rating.count})</small></p>
-              <button className="btn btn-primary" onClick={() => onAddToCart(product)}>Add to Cart</button>
+    <div>
+      <div className="d-flex justify-content-center mb-4">
+        <input
+          type="text"
+          className="form-control me-2"
+          placeholder="Search products"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+        <button className="btn btn-primary">Search</button>
+      </div>
+      <div className="row row-cols-1 row-cols-md-3 g-4">
+        {filteredProducts.map((product) => (
+          <div className="col" key={product.id}>
+            <div className="card">
+              <img src={product.image} className="card-img-top" alt={product.title} />
+              <div className="card-body">
+                <h5 className="card-title">{product.title}</h5>
+                <p className="card-text">{product.description}</p>
+                <p className="card-text">${product.price}</p>
+                <p className="card-text"><small className="text-muted">{product.rating.rate} ({product.rating.count})</small></p>
+                <div className="d-flex align-items-center justify-content-between">
+                  <div>
+                    <button className="btn btn-primary me-2" onClick={() => onAddToCart({ ...product, quantity: (quantities[product.id] || 0) + 1 })}>Add to Cart</button>
+                    <span className="fs-5">{quantities[product.id] || 0}</span>
+                  </div>
+                  <div>
+                    <button className="btn btn-secondary me-2" onClick={() => handleDecrement(product.id)}>-</button>
+                    <button className="btn btn-secondary" onClick={() => handleIncrement(product.id)}>+</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
