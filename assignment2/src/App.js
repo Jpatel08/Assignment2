@@ -39,7 +39,7 @@ const ProductGrid = ({ onAddToCart }) => {
   const [searchTerm, setSearchTerm] = useState('');
   let numClick =0;
 
-  const handleIncrement = (productId) => {
+  const handleIncrement = (productId,numClick) => {
     numClick+=1;
     setQuantities({
       ...quantities,
@@ -60,6 +60,7 @@ const ProductGrid = ({ onAddToCart }) => {
   const filteredProducts = Products.filter((product) => {
     return product.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
+
 
   return (
     <div >
@@ -169,6 +170,11 @@ const Cart = ({ cartItems, onRemoveFromCart, total }) => {
             </tbody>
           </table>
           <div className="total-price">Total: ${total}</div>
+          <div>
+            <form>
+
+            </form>
+          </div>
         </>
       ) : (
         <p>Your cart is empty</p>
@@ -202,9 +208,11 @@ const App = () => {
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => (total + item.price * item.quantity*1.07).toFixed(2) , 0);
+    const total = cartItems.reduce((total, item) => (total + item.price * item.quantity * 1.07), 0);
+    return total.toFixed(2);
   };
-
+  
+  
   return (
     <div class="pageBG">
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
