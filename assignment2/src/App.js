@@ -174,6 +174,9 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange }) => {
           <div className="total-price">Total: ${total}</div>
           <div>
             <form>
+
+{/* NEED TO ADD FORM STUFF HERE FOR USER INFO */}
+              
             <div></div><button className ="btn btn-danger" onClick={() => onViewChange('confirmation')}>Order</button>
             </form>
           </div>
@@ -210,11 +213,22 @@ const Confimation = ({cartItems, total, userInfo}) => {
       </table>
       <div className="total-price">Total: ${total}</div>
       <div>
-        <>
-        <table className="table">
         
+        <table className="table">
+          <thread>
+          <tr>
+            <th scope="col">Full Name</th>
+            <th scope="col">Card Info</th>
+            <th scope="col">Address</th>
+          </tr>
+          </thread>
+          {userInfo.map((item) => (
+            <><td>{userInfo.firstName} {userInfo.lastName}</td>
+            <td>{userInfo.cardInfo}</td>
+            <td>{userInfo.address}</td></>
+
+          ))}
         </table>
-        </>
       </div>
       </>
     </div>
