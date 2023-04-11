@@ -36,3 +36,49 @@
     transform: rotate(360deg);
   }
 }
+#navCheckout{
+  background:#2f9c76;
+  width: auto;
+  height: auto;
+  right:0px;
+  color:white;
+  border-radius: 4px;
+}
+.navColors{
+  opacity: 70%;
+  background-color: #feda75;
+
+
+}
+.pageBG{
+  
+  background-color: white;
+}
+.cardBG{
+ background-color:  #2f9c76
+ ;
+}
+.search-container {
+  margin-top: 20px;
+}
+.w{
+  color: white;
+}
+button.btn-custom{
+  background-color: #F4F0BB;
+  border-color: #F4F0BB;
+  color: black;
+}
+button.btn-custom:hover {
+  background-color: #ece8b1;
+  border-color: #ece8b1;
+}
+button.searchCstm{
+  background-color: #9B97B2;
+  border-color: #9B97B2;
+}
+button.searchCstm:hover{
+  background-color: #8e8aa4;
+  border-color: #8e8aa4;
+}
+

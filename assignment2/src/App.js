@@ -6,19 +6,23 @@ import React, { useState } from 'react';
 
 const Navbar = ({ cartItemsCount, onViewChange }) => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light"
+         style={{backgroundColor: "#ff6150"}}>
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">My Store</a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
+        <a className="navbar-brand" href="/" style={{color: "white"}}>My Store</a>
         <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav me-auto">
+            <li className="nav-item">
+              <a className="nav-link active" aria-current="page" href="#"
+                 onClick={() => onViewChange('products')}
+                 style={{color: "white"}}>Products</a>
+            </li>
+          </ul>
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#" onClick={() => onViewChange('products')}>Products</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#" onClick={() => onViewChange('cart')}>Shopping Cart ({cartItemsCount})</a>
+              <a className="nav-link" href="#" id="navCheckout"
+                 onClick={() => onViewChange('cart')}
+                 style={{color: "white"}}>Checkout</a>
             </li>
           </ul>
         </div>
@@ -27,18 +31,24 @@ const Navbar = ({ cartItemsCount, onViewChange }) => {
   );
 };
 
+
+
+
 const ProductGrid = ({ onAddToCart }) => {
   const [quantities, setQuantities] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
+  let numClick =0;
 
   const handleIncrement = (productId) => {
+    numClick+=1;
     setQuantities({
       ...quantities,
-      [productId]: (quantities[productId] || 0) + 1
+      [productId]: (quantities[productId] || 0) + numClick,
     });
   };
 
   const handleDecrement = (productId) => {
+    numClick -=1
     const newQuantities = { ...quantities };
     newQuantities[productId]--;
     if (newQuantities[productId] < 0) {
@@ -52,35 +62,35 @@ const ProductGrid = ({ onAddToCart }) => {
   });
 
   return (
-    <div>
-      <div className="d-flex justify-content-center mb-4">
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Search products"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-        />
-        <button className="btn btn-primary">Search</button>
-      </div>
+    <div >
+ <div className="d-flex justify-content-center mb-4">
+      <input
+        type="text"
+        className="form-control me-2"
+        placeholder="Search products"
+        value={searchTerm}
+        onChange={(event) => setSearchTerm(event.target.value)}
+      />
+      <button className="btn btn-primary searchCstm">Search</button>
+    </div>
+
       <div className="row row-cols-1 row-cols-md-3 g-4">
         {filteredProducts.map((product) => (
           <div className="col" key={product.id}>
             <div className="card">
               <img src={product.image} className="card-img-top" alt={product.title} />
-              <div className="card-body">
-                <h5 className="card-title">{product.title}</h5>
-                <p className="card-text">{product.description}</p>
-                <p className="card-text">${product.price}</p>
-                <p className="card-text"><small className="text-muted">{product.rating.rate} ({product.rating.count})</small></p>
+              <div className="cardBG">
+                <h5 className="card-title w">{product.title}</h5>
+                <p className="card-text w">{product.description}</p>
+                <p className="card-text w">${product.price}</p>
+                <p className="card-text w"><small className="text-muted w">{product.rating.rate} ({product.rating.count})</small></p>
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                    <button className="btn btn-primary me-2" onClick={() => onAddToCart({ ...product, quantity: (quantities[product.id] || 0) + 1 })}>Add to Cart</button>
-                    <span className="fs-5">{quantities[product.id] || 0}</span>
+                  <button className="btn btn-primary me-2 btn-custom" onClick={() => onAddToCart({ ...product, quantity: (quantities[product.id] || 0) + 1 })}>Add to Cart</button>                    <span className="fs-5">{quantities[product.id] || 0}</span>
                   </div>
                   <div>
                     <button className="btn btn-secondary me-2" onClick={() => handleDecrement(product.id)}>-</button>
-                    <button className="btn btn-secondary" onClick={() => handleIncrement(product.id)}>+</button>
+                    <button className="btn btn-secondary" onClick={() => handleIncrement(product.id,numClick)}>+</button>
                   </div>
                 </div>
               </div>
@@ -89,6 +99,7 @@ const ProductGrid = ({ onAddToCart }) => {
         ))}
       </div>
     </div>
+    
   );
 };
 
@@ -191,11 +202,11 @@ const App = () => {
   };
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce((total, item) => (total + item.price * item.quantity*1.07).toFixed(2) , 0);
   };
 
   return (
-    <div>
+    <div class="pageBG">
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
       <div className="container">
         {view === 'products' && <ProductGrid onAddToCart={handleAddToCart} />}
