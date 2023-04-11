@@ -141,7 +141,9 @@ const ShoppingCart = ({ cartItems, onRemoveFromCart, total }) => {
   );
 };
 
-const Cart = ({ cartItems, onRemoveFromCart, total }) => {
+
+
+const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange }) => {
   return (
     <div className="container mt-3">
       <h1>Shopping Cart</h1>
@@ -172,7 +174,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total }) => {
           <div className="total-price">Total: ${total}</div>
           <div>
             <form>
-
+            <div></div><button className ="btn btn-danger" onClick={() => onViewChange('confirmation')}>Order</button>
             </form>
           </div>
         </>
@@ -182,7 +184,42 @@ const Cart = ({ cartItems, onRemoveFromCart, total }) => {
     </div>
   );
 };
-
+const Confimation = ({cartItems, total, userInfo}) => {
+  return(
+    <div className="container mt-3">
+      <h1>Confimation</h1>
+      <>
+      <table className="table">
+      <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Image</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      {cartItems.map((item) => (
+        <tr key={item.id}>
+          <td>{item.title}</td>
+          <td>${item.price}</td>
+          <td>{item.quantity}</td>
+          <td><img src={item.image} alt={item.title} className="img-thumbnail" width="115px" height="115px"></img></td>
+        </tr>
+      ))}
+      </table>
+      <div className="total-price">Total: ${total}</div>
+      <div>
+        <>
+        <table className="table">
+        
+        </table>
+        </>
+      </div>
+      </>
+    </div>
+  )
+}
 const App = () => {
   const [view, setView] = useState('products');
   const [cartItems, setCartItems] = useState([]);
@@ -218,7 +255,8 @@ const App = () => {
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
       <div className="container">
         {view === 'products' && <ProductGrid onAddToCart={handleAddToCart} />}
-        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} />}
+        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} />}
+        {view === 'confirmation' && <Confimation cartItems={cartItems} total={0} userInfo={[]} />} 
       </div>
     </div>
   );
