@@ -142,14 +142,24 @@ const ShoppingCart = ({ cartItems, onRemoveFromCart, total }) => {
 };
 
 
-const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) => {
+const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChange}) => {
 
-  const addInfo = () => {
-    setUserInfo(document.getElementById('inputName').value);
-    setUserInfo(document.getElementById('inputEmail4').value);
-    setUserInfo(document.getElementById('inputCard').value);
-    setUserInfo(document.getElementById('inputAddress').value + document.getElementById('inputAddress2').value);
-  }
+  // const addInfo = () => {
+  //   console.log(userInfo);
+  //   setUserInfo({...userInfo, fullName: document.getElementById('inputName').value});
+  //   console.log(userInfo);
+  //   console.log(document.getElementById('inputName').value);
+  //   setUserInfo({...userInfo, email: document.getElementById('inputEmail4').value});
+  //   console.log(document.getElementById('inputEmail4').value);
+  //   setUserInfo({ cardInfo: document.getElementById('inputCard').value});
+  //   console.log(document.getElementById('inputCard').value);
+  //   console.log(userInfo);
+  //   setUserInfo({...userInfo, address: document.getElementById('inputAddress').value + document.getElementById('inputAddress2').value});
+  //   console.log(document.getElementById('inputAddress').value + document.getElementById('inputAddress2').value)
+    
+  //   console.log('yo');
+  //   console.log(userInfo);
+  // }
 
   return (
     <div className="container mt-3">
@@ -187,7 +197,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) 
         <label for="inputName" class="form-label">
           Full Name
         </label>
-        <input type="text" class="form-control" id="inputName" />
+        <input type="text" class="form-control" id="inputName" onChange={handleFormChange}/>
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">
           Must be like, "John Doe"
@@ -201,7 +211,8 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) 
         <input
           type="email"
           class="form-control"
-          id="inputEmail4" />
+          id="inputEmail4"
+          onChange={handleFormChange} />
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">
           Must be like, "abc@xyz.efg"
@@ -219,6 +230,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) 
           <input
             type="text"
             id="inputCard"
+            onChange={handleFormChange}
             class="form-control"
             placeholder="XXXX-XXXX-XXXX-XXXX"
             aria-label="Username"
@@ -238,6 +250,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) 
           type="text"
           class="form-control"
           id="inputAddress"
+          onChange={handleFormChange}
           placeholder="1234 Main St" />
       </div>
       <div class="col-12">
@@ -266,11 +279,11 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) 
         <label for="inputZip" class="form-label">
           Zip
         </label>
-        <input type="text" class="form-control" id="inputZip" />
+        <input type="text" class="form-control" id="inputZip" onChange={handleFormChange} />
       </div>
       <div class="col-12"></div>
       <div class="col-12">
-        <button type="submit" class="btn btn-success" onClick={() => {addInfo(); onViewChange('confirmation')}}>
+        <button type="submit" class="btn btn-success" onClick={() => {onViewChange('confirmation')}}>
           {" "}
           <i class="bi-bag-check"></i> Order
         </button>
@@ -312,24 +325,12 @@ const Confimation = ({cartItems, total, userInfo}) => {
         </tr>
       ))}
       </table>
-      <div className="total-price">Total: ${total}</div>
+      <div className="total-price"><b>Total:</b> ${total}</div>
       <div>
-        
-        <table className="table">
-          <thread>
-          <tr>
-            <th scope="col">Full Name</th>
-            <th scope="col">Card Info</th>
-            <th scope="col">Address</th>
-          </tr>
-          </thread>
-          {userInfo.map((item) => (
-            <><td>{userInfo.firstName} {userInfo.lastName}</td>
-            <td>{userInfo.cardInfo}</td>
-            <td>{userInfo.address}</td></>
+        <h4>User Info</h4>
+        <>
+        <p>Full Name:{userInfo.inputName} <br></br> Email Address: {userInfo.inputEmail4} <br></br>Card Info: {userInfo.inputCard} <br></br>Given Address: {userInfo.inputAddress}</p></>
 
-          ))}
-        </table>
       </div>
       </>
     </div>
@@ -338,13 +339,13 @@ const Confimation = ({cartItems, total, userInfo}) => {
 const App = () => {
   const [view, setView] = useState('products');
   const [cartItems, setCartItems] = useState([]);
-  const [userInfo, setUserInfo] = useState([])
+  const [userInfo, setUserInfo] = useState({})
 
-  const handleAddUserInfo = (input) => {
-    setUserInfo([...userInfo, input]);
-    console.log(input);
+
+  const handleUserChange = (event) => {
+    setUserInfo({ ...userInfo, [event.target.id]:event.target.value});
     console.log(userInfo);
-  }
+  };
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -377,8 +378,8 @@ const App = () => {
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
       <div className="container">
         {view === 'products' && <ProductGrid onAddToCart={handleAddToCart} />}
-        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} setUserInfo={handleAddUserInfo} />}
-        {view === 'confirmation' && <Confimation cartItems={cartItems} total={0} userInfo={userInfo} />} 
+        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} handleFormChange={handleUserChange} />}
+        {view === 'confirmation' && <Confimation cartItems={cartItems} total={calculateTotal()} userInfo={userInfo} />} 
       </div>
     </div>
   );
