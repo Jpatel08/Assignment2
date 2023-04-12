@@ -346,7 +346,6 @@ const App = () => {
     console.log(userInfo);
   }
 
-
   const handleViewChange = (newView) => {
     setView(newView);
   };
@@ -372,7 +371,7 @@ const App = () => {
     return total.toFixed(2);
   };
   
-  
+  console.log(userInfo);
   return (
     <div class="pageBG">
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
