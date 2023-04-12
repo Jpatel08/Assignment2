@@ -68,6 +68,7 @@ button.btn-custom{
   background-color: #F4F0BB;
   border-color: #F4F0BB;
   color: black;
+
 }
 button.btn-custom:hover {
   background-color: #ece8b1;
@@ -80,5 +81,9 @@ button.searchCstm{
 button.searchCstm:hover{
   background-color: #8e8aa4;
   border-color: #8e8aa4;
+}
+.searchBar{
+  background-color: #4A9EBA;
+  color: #4A9EBA;
 }
 

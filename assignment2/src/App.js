@@ -37,18 +37,15 @@ const Navbar = ({ cartItemsCount, onViewChange }) => {
 const ProductGrid = ({ onAddToCart }) => {
   const [quantities, setQuantities] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
-  let numClick =0;
 
-  const handleIncrement = (productId,numClick) => {
-    numClick+=1;
+  const handleIncrement = (productId) => {
     setQuantities({
       ...quantities,
-      [productId]: (quantities[productId] || 0) + numClick,
+      [productId]: (quantities[productId] || 0) + 1
     });
   };
 
   const handleDecrement = (productId) => {
-    numClick -=1
     const newQuantities = { ...quantities };
     newQuantities[productId]--;
     if (newQuantities[productId] < 0) {
@@ -61,19 +58,18 @@ const ProductGrid = ({ onAddToCart }) => {
     return product.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-
   return (
-    <div >
- <div className="d-flex justify-content-center mb-4">
-      <input
-        type="text"
-        className="form-control me-2"
-        placeholder="Search products"
-        value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
-      />
-      <button className="btn btn-primary searchCstm">Search</button>
-    </div>
+    <div>
+      <div className="d-flex justify-content-center mb-4">
+        <input
+          type="text"
+          className="form-control me-2"
+          placeholder="Search products"
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+        <button className="btn btn-primary searchBar">Search</button>
+      </div>
 
       <div className="row row-cols-1 row-cols-md-3 g-4">
         {filteredProducts.map((product) => (
@@ -87,11 +83,12 @@ const ProductGrid = ({ onAddToCart }) => {
                 <p className="card-text w"><small className="text-muted w">{product.rating.rate} ({product.rating.count})</small></p>
                 <div className="d-flex align-items-center justify-content-between">
                   <div>
-                  <button className="btn btn-primary me-2 btn-custom" onClick={() => onAddToCart({ ...product, quantity: (quantities[product.id] || 0) + 1 })}>Add to Cart</button>                    <span className="fs-5">{quantities[product.id] || 0}</span>
+                    <button className="btn btn-primary me-2 btn-custom" onClick={() => onAddToCart({ ...product, quantity: quantities[product.id] || 0 })}>Add to Cart</button>
+                    <span className="fs-5">{quantities[product.id] || 0}</span>
                   </div>
                   <div>
                     <button className="btn btn-secondary me-2" onClick={() => handleDecrement(product.id)}>-</button>
-                    <button className="btn btn-secondary" onClick={() => handleIncrement(product.id,numClick)}>+</button>
+                    <button className="btn btn-secondary" onClick={() => handleIncrement(product.id)}>+</button>
                   </div>
                 </div>
               </div>
@@ -100,7 +97,6 @@ const ProductGrid = ({ onAddToCart }) => {
         ))}
       </div>
     </div>
-    
   );
 };
 
@@ -190,17 +186,17 @@ const App = () => {
   const handleViewChange = (newView) => {
     setView(newView);
   };
-
-  const handleAddToCart = (product) => {
-    const itemIndex = cartItems.findIndex((item) => item.id === product.id);
-    if (itemIndex === -1) {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+  const handleAddToCart = (newItem) => {
+    const existingItem = cartItems.findIndex((item) => item.id === newItem.id);
+    if (existingItem !== -1) {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingItem].quantity += newItem.quantity;
+      setCartItems(updatedCartItems);
     } else {
-      const newCartItems = [...cartItems];
-      newCartItems[itemIndex].quantity++;
-      setCartItems(newCartItems);
+      setCartItems([...cartItems, newItem]);
     }
   };
+  
 
   const handleRemoveFromCart = (productId) => {
     const newCartItems = cartItems.filter((item) => item.id !== productId);
