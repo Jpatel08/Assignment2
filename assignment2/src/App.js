@@ -142,8 +142,15 @@ const ShoppingCart = ({ cartItems, onRemoveFromCart, total }) => {
 };
 
 
+const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, setUserInfo}) => {
 
-const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange }) => {
+  const addInfo = () => {
+    setUserInfo(document.getElementById('inputName').value);
+    setUserInfo(document.getElementById('inputEmail4').value);
+    setUserInfo(document.getElementById('inputCard').value);
+    setUserInfo(document.getElementById('inputAddress').value + document.getElementById('inputAddress2').value);
+  }
+
   return (
     <div className="container mt-3">
       <h1>Shopping Cart</h1>
@@ -175,18 +182,112 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange }) => {
           <div>
             <form>
 
-{/* NEED TO ADD FORM STUFF HERE FOR USER INFO */}
-              
-            <div></div><button className ="btn btn-danger" onClick={() => onViewChange('confirmation')}>Order</button>
-            </form>
+            <><h1>Payment Information</h1><div id="liveAlertPlaceholder"></div><form class="row g-3" id="checkout-form">
+      <div class="col-md-6">
+        <label for="inputName" class="form-label">
+          Full Name
+        </label>
+        <input type="text" class="form-control" id="inputName" />
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">
+          Must be like, "John Doe"
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="inputEmail4" class="form-label">
+          Email
+        </label>
+        <input
+          type="email"
+          class="form-control"
+          id="inputEmail4" />
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">
+          Must be like, "abc@xyz.efg"
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label for="inputCard" class="form-label">
+          Card
+        </label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">
+            <i class="bi-credit-card-fill"></i>
+          </span>
+          <input
+            type="text"
+            id="inputCard"
+            class="form-control"
+            placeholder="XXXX-XXXX-XXXX-XXXX"
+            aria-label="Username"
+            aria-describedby="basic-addon1" />
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">
+            Must be like, "7777-7777-7777-7777"
           </div>
-        </>
-      ) : (
+        </div>
+      </div>
+
+      <div class="col-12">
+        <label for="inputAddress" class="form-label">
+          Address
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputAddress"
+          placeholder="1234 Main St" />
+      </div>
+      <div class="col-12">
+        <label for="inputAddress2" class="form-label">
+          Address 2
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputAddress2"
+          placeholder="Apartment, studio, or floor" />
+      </div>
+      <div class="col-md-6">
+        <label for="inputCity" class="form-label">
+          City
+        </label>
+        <input type="text" class="form-control" id="inputCity" />
+      </div>
+      <div class="col-md-6">
+        <label for="inputCity" class="form-label">
+          State
+        </label>
+        <input type="text" class="form-control" id="inputCity" />
+      </div>
+      <div class="col-md-2">
+        <label for="inputZip" class="form-label">
+          Zip
+        </label>
+        <input type="text" class="form-control" id="inputZip" />
+      </div>
+      <div class="col-12"></div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-success" onClick={() => {addInfo(); onViewChange('confirmation')}}>
+          {" "}
+          <i class="bi-bag-check"></i> Order
+        </button>
+      </div>
+    </form></>
+              
+    </form>
+    </div>
+     </>
+     ) : (
         <p>Your cart is empty</p>
       )}
     </div>
   );
 };
+
+
 const Confimation = ({cartItems, total, userInfo}) => {
   return(
     <div className="container mt-3">
@@ -237,6 +338,14 @@ const Confimation = ({cartItems, total, userInfo}) => {
 const App = () => {
   const [view, setView] = useState('products');
   const [cartItems, setCartItems] = useState([]);
+  const [userInfo, setUserInfo] = useState([])
+
+  const handleAddUserInfo = (input) => {
+    setUserInfo([...userInfo, input]);
+    console.log(input);
+    console.log(userInfo);
+  }
+
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -269,8 +378,8 @@ const App = () => {
       <Navbar onViewChange={handleViewChange} cartItems={cartItems} />
       <div className="container">
         {view === 'products' && <ProductGrid onAddToCart={handleAddToCart} />}
-        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} />}
-        {view === 'confirmation' && <Confimation cartItems={cartItems} total={0} userInfo={[]} />} 
+        {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} setUserInfo={handleAddUserInfo} />}
+        {view === 'confirmation' && <Confimation cartItems={cartItems} total={0} userInfo={userInfo} />} 
       </div>
     </div>
   );
