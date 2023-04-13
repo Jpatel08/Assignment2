@@ -192,7 +192,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChan
     }
     if (val) {
       form.classList.add("collapse")
-      alert('<i class="bi-cart-check-fill"></i> You have made an order!', 'success')
+      alert('You have made an order!', 'success')
     }
     return val;
   }
@@ -338,7 +338,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChan
 };
 
 
-const Confimation = ({cartItems, total, userInfo}) => {
+const Confimation = ({cartItems, total, userInfo, onViewChange}) => {
   return(
     <div className="container mt-3">
       <h1>Confimation</h1>
@@ -367,7 +367,10 @@ const Confimation = ({cartItems, total, userInfo}) => {
         <h4>User Info</h4>
         <>
         <p>Full Name:{userInfo.inputName} <br></br> Email Address: {userInfo.inputEmail4} <br></br>Card Info: {userInfo.inputCard} <br></br>Given Address: {userInfo.inputAddress}</p></>
-
+        <a href="/"><button type="submit" class="btn btn-success" onClick={() => {onViewChange('products')}}>
+          {" "}
+          <i class="bi-bag-check"></i> Return
+        </button></a>
       </div>
       </>
     </div>
@@ -416,7 +419,7 @@ const App = () => {
       <div className="container">
         {view === 'products' && <ProductGrid onAddToCart={handleAddToCart} />}
         {view === 'cart' && <Cart cartItems={cartItems} onRemoveFromCart={handleRemoveFromCart} total={calculateTotal()} onViewChange={handleViewChange} handleFormChange={handleUserChange} />}
-        {view === 'confirmation' && <Confimation cartItems={cartItems} total={calculateTotal()} userInfo={userInfo} />} 
+        {view === 'confirmation' && <Confimation cartItems={cartItems} total={calculateTotal()} userInfo={userInfo} onViewChange={handleViewChange} />} 
       </div>
     </div>
   );
