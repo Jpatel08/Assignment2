@@ -161,6 +161,43 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChan
   //   console.log(userInfo);
   // }
 
+  // Form validation stuff
+  let validate = function () {
+    let val = true;
+    let email = document.getElementById('inputEmail4')
+    let name = document.getElementById('inputName')
+    let card = document.getElementById('inputCard')
+    let form = document.getElementById('form')
+    if (!email.value.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9] {1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )) {
+      email.setAttribute("class", "form-control is-invalid");
+      val = false;
+    }
+    else {
+      email.setAttribute("class", "form-control is-valid");
+    }
+    if (name.value.length == 0) {
+      name.setAttribute("class", "form-control is-invalid")
+      val = false
+    }
+    else {
+      name.setAttribute("class", "form-control is-valid");
+    }
+    if (!card.value.match(/^[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}$/)) {
+      card.setAttribute("class", "form-control is-invalid")
+      val = false
+    }
+    else {
+      card.setAttribute("class", "form-control is-valid");
+    }
+    if (val) {
+      form.classList.add("collapse")
+      alert('<i class="bi-cart-check-fill"></i> You have made an order!', 'success')
+    }
+    return val;
+  }
+
+
   return (
     <div className="container mt-3">
       <h1>Shopping Cart</h1>
@@ -190,7 +227,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChan
           </table>
           <div className="total-price">Total: ${total}</div>
           <div>
-            <form>
+            <form id="form">
 
             <><h1>Payment Information</h1><div id="liveAlertPlaceholder"></div><form class="row g-3" id="checkout-form">
       <div class="col-md-6">
@@ -283,7 +320,7 @@ const Cart = ({ cartItems, onRemoveFromCart, total, onViewChange, handleFormChan
       </div>
       <div class="col-12"></div>
       <div class="col-12">
-        <button type="submit" class="btn btn-success" onClick={() => {onViewChange('confirmation')}}>
+        <button type="submit" class="btn btn-success" onClick={() => {if(validate())onViewChange('confirmation')}}>
           {" "}
           <i class="bi-bag-check"></i> Order
         </button>
